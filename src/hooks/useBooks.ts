@@ -1,34 +1,46 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "../axios/axios";
-import type { Book } from "../api/types/book";
+import { useCallback, useEffect, useState } from 'react';
+import bookApi from '../api/books/bookApi';
+import type { Book, BookFormData } from '../api/types/book';
 
 const useBooks = () => {
   const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        console.log(" FETCHING BOOKS...");
-
-        const res = await axiosInstance.get<Book[]>("/books");
-
-        console.log(" RAW RESPONSE:", res);
-        console.log(" RESPONSE DATA:", res.data);
-
-        setBooks(res.data ?? []);
-      } catch (error) {
-        console.error(" Books error:", error);
-        setBooks([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
+  const fetch = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await bookApi.findAll();
+      setBooks(response.data);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Error'));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { books, loading };
+  const onAdd = useCallback(async (data: BookFormData) => {
+    await bookApi.add(data);
+    await fetch();
+  }, [fetch]);
+
+  const onEdit = useCallback(async (id: number, data: BookFormData) => {
+    await bookApi.edit(id.toString(), data);
+    await fetch();
+  }, [fetch]);
+
+ const onDelete = useCallback(async (id: number) => {
+   await bookApi.delete(id.toString());
+   const response = await bookApi.findAll();
+   setBooks(response.data);
+ }, []);
+
+  useEffect(() => {
+    void fetch();
+  }, [fetch]);
+
+  return { books, loading, error, onAdd, onEdit, onDelete };
 };
 
 export default useBooks;

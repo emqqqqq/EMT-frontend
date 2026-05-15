@@ -12,3 +12,10 @@ export interface Book {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface BookFormData {
+  name: string;
+  category: string;
+  authorId: string;
+  availableCopies: string;
+}

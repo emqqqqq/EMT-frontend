@@ -5,16 +5,22 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from "react-router-dom";
 import { useState } from 'react';
+import AuthToggle from '../../auth/AuthToggle/AuthToggle.tsx';
+import useAuth from '../../../../hooks/useAuth';
 
 const pages = [
   { path: '/', name: 'home' },
   { path: '/books', name: 'books' },
   { path: '/authors', name: 'authors' },
-  { path: '/countries', name: 'countries' }
+  { path: '/countries', name: 'countries' },
+  { path: '/wishlist', name: 'wishlist' }
 ];
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const { isLoggedIn } = useAuth();
+  const visiblePages = pages.filter((page) => !page.authenticated || isLoggedIn);
 
   return (
     <Box>
@@ -45,7 +51,9 @@ const Header = () => {
             ))}
           </Box>
 
-          <Button color='inherit' sx={{ ml: 'auto' }}>Login</Button>
+           <Box sx={{flexGrow: 1, display: 'flex', justifyContent: 'flex-end'}}>
+              <AuthToggle/>
+            </Box>
         </Toolbar>
       </AppBar>
 

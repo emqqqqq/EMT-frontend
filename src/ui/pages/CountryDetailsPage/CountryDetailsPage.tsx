@@ -11,7 +11,7 @@ const CountryDetailsPage = () => {
   if (!country) return <Typography>Country not found</Typography>;
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box align="center">
       <Typography variant="h4">{country.name}</Typography>
 
       <Typography mt={2}>

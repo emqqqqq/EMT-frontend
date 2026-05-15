@@ -1,13 +1,21 @@
-import axiosInstance from "../../axios/axios";
-import type { Book } from "../types/book";
+import axiosInstance from '../../axios/axios.ts';
+import type { Book, BookFormData } from './types/book.ts';
 
-const booksApi = {
+const bookApi = {
   findAll: async () => {
-    return await axiosInstance.get<Book[]>("/books");
+    return await axiosInstance.get<Book[]>('/books');
   },
-
-  findById: async (id: number) => {
+  findById: async (id: string) => {
     return await axiosInstance.get<Book>(`/books/${id}`);
+  },
+  add: async (data: BookFormData) => {
+    return await axiosInstance.post<Book>('/books', data);
+  },
+  edit: async (id: string, data: BookFormData) => {
+    return await axiosInstance.put<Book>(`/books/${id}`, data);
+  },
+  delete: async (id: string) => {
+    return await axiosInstance.delete<Book>(`/books/${id}`);
   }
 };
 

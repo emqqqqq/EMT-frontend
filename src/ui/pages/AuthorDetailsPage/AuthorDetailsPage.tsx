@@ -11,7 +11,7 @@ const AuthorDetailsPage = () => {
   if (!author) return <Typography>Author not found</Typography>;
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box align="center">
       <Typography variant="h4">
         {author.name} {author.surname}
       </Typography>

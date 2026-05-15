@@ -1,28 +1,46 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "../axios/axios";
-import type { Country } from "../api/types/country";
+import { useCallback, useEffect, useState } from "react";
+import countryApi from "../api/countries/countryApi";
+import type { Country, CountryFormData } from "../api/types/country";
 
 const useCountries = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchCountries = async () => {
-      try {
-        const res = await axiosInstance.get<Country[]>("/countries");
-        setCountries(res.data ?? []);
-      } catch (error) {
-        console.error("Countries error:", error);
-        setCountries([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetch = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-    fetchCountries();
+    try {
+      const response = await countryApi.findAll();
+      setCountries(response.data);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error("Error"));
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { countries, loading };
+  const onAdd = useCallback(async (data: CountryFormData) => {
+    await countryApi.add(data);
+    await fetch();
+  }, [fetch]);
+
+  const onEdit = useCallback(async (id: number, data: CountryFormData) => {
+    await countryApi.edit(id.toString(), data);
+    await fetch();
+  }, [fetch]);
+
+  const onDelete = useCallback(async (id: number) => {
+    await countryApi.delete(id.toString());
+    await fetch();
+  }, [fetch]);
+
+  useEffect(() => {
+    void fetch();
+  }, [fetch]);
+
+  return { countries, loading, error, onAdd, onEdit, onDelete };
 };
 
 export default useCountries;

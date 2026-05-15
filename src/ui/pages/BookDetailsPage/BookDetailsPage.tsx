@@ -8,7 +8,7 @@ const BookDetailsPage = () => {
 
   if (loading) {
     return (
-      <Box sx={{ p: 3 }}>
+      <Box>
         <CircularProgress />
       </Box>
     );
@@ -16,14 +16,14 @@ const BookDetailsPage = () => {
 
   if (!book) {
     return (
-      <Box sx={{ p: 3 }}>
+      <Box>
         <Typography>Book not found</Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box align="center">
       <Typography variant="h4">{book.name}</Typography>
 
       <Typography mt={2}>

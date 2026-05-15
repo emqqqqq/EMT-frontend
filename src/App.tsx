@@ -9,20 +9,29 @@ import BookDetailsPage from "./ui/pages/BookDetailsPage/BookDetailsPage.tsx";
 import AuthorDetailsPage from "./ui/pages/AuthorDetailsPage/AuthorDetailsPage.tsx";
 import CountryDetailsPage from "./ui/pages/CountryDetailsPage/CountryDetailsPage.tsx";
 import BookStatsPage from "./ui/pages/BookStatsPage/BookStatsPage.tsx";
+import RegisterPage from './ui/pages/auth/RegisterPage/RegisterPage.tsx';
+import LoginPage from './ui/pages/auth/LoginPage/LoginPage.tsx';
+import WishListPage from './ui/pages/WishListPage/WishListPage.tsx';
+import ProtectedRoute from './ui/components/routing/ProtectedRoute/ProtectedRoute.tsx';
 
 function App() {
   return (
     <BrowserRouter>
         <Routes>
+         <Route path='/register' element={<RegisterPage/>}/>
+         <Route path='/login' element={<LoginPage/>}/>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="books" element={<Books />} />
-            <Route path="authors" element={<Authors />} />
-            <Route path="countries" element={<Countries />} />
-            <Route path="/books/:id" element={<BookDetailsPage />} />
-            <Route path="/authors/:id" element={<AuthorDetailsPage />} />
-            <Route path="/countries/:id" element={<CountryDetailsPage />} />
-            <Route path="/books/stats" element={<BookStatsPage />} />
+            <Route element={<ProtectedRoute/>}>
+                <Route path="books" element={<Books />} />
+                <Route path="authors" element={<Authors />} />
+                <Route path="countries" element={<Countries />} />
+                <Route path="/books/:id" element={<BookDetailsPage />} />
+                <Route path="/authors/:id" element={<AuthorDetailsPage />} />
+                <Route path="/countries/:id" element={<CountryDetailsPage />} />
+                <Route path="/books/stats" element={<BookStatsPage />} />
+                <Route path="/wishlist" element={<WishListPage />}/>
+            </Route>
           </Route>
         </Routes>
     </BrowserRouter>

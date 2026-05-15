@@ -4,14 +4,16 @@ import CountryCard from "../CountryCard/CountryCard";
 
 interface Props {
   countries: Country[];
+  onEdit: (id: number, data: CountryFormData) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
 }
 
-const CountryGrid = ({ countries = [] }: Props) => {
+const CountryGrid = ({ countries = [], onEdit, onDelete }: Props) => {
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mt: 2 }}>
       {countries.map((country) => (
-        <Grid item key={country.id} xs={12} sm={6} md={4}>
-          <CountryCard country={country} />
+        <Grid item key={country.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <CountryCard country={country} onEdit={onEdit} onDelete={onDelete} />
         </Grid>
       ))}
     </Grid>
